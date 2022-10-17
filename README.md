@@ -52,14 +52,19 @@ Go to <https://developers.facebook.com/apps/>
 
 - select the app type: **"consumer"**
 - provide basic info, such as:
+
   - app name (can be changed)
   - contact name
+
     ![type](priv/Screenshot%202022-10-16%20at%2014.08.35.png)
 
 #### Step 1.3 Get and save your credentials
 
 Once you are done, you arrive to the Dasboard.
 Select **settings**, then **basic**.
+
+![settings](priv/Screenshot%202022-10-17%20at%2017.58.35.png)
+
 You will find your **credentials** there.
 Copy the App ID and the App Secret into your `.env` file.
 
@@ -82,7 +87,6 @@ Your app won't work if a wrong or incomplete base URL is set.
 
 ![select platform](priv/Screenshot%202022-10-17%20at%2018.05.17.png)
 
--
 - a new input will appear: fill the **Site URL** with:
   <http://localhost:4000>
 
@@ -134,7 +138,8 @@ The redirection is set in the router. Add iths line:
 
 scope "/", MyAppWeb do
     pipe_through :browser
-    get "/auth/facebook/callback", FacebookAuthController, :login
+    get "/auth/facebook/callback",
+        FacebookAuthController, :login
 end
 ```
 
@@ -149,7 +154,9 @@ defmodule MyAppWeb.FacebookController do
     def login(conn, _,_) do
 
         {:ok, profile} =
-            ElixirAuthFacebook.handle_callback(conn, params)
+            ElixirAuthFacebook.handle_callback(
+                conn, params
+            )
     end
 end
 ```
@@ -196,7 +203,7 @@ end
 ```
 
 In you want to overright it, define a custom termination function `happy_end/3`
-and pass it as a third optional argument to the call_back:
+and pass it as a third optional argument to the callback:
 
 ```elixir
 {:ok, profile} =
@@ -212,15 +219,17 @@ and pass it as a third optional argument to the call_back:
 All the flow to build the Login flow can be found here:
 <https://developers.facebook.com/docs/facebook-login/guides/advanced/manual-flow>
 
-#### Privacy Concerns? 🔐
+#### Meta / Privacy Concerns? 🔐
 
-No cookie is set.
+No cookie is set. It just provides user authentication this Login is just.... a login.
+
+❗️ Some [opinions(?) on Meta](https://archive.ph/epKXZ). Use this package as a last resort if you have no other option!
 
 #### Data deletion?
 
-cf <https://developers.facebook.com/docs/facebook-login/overview>
+If you want to use the package to access Metas' eco-system, then you need to provide [a data deletion option](https://developers.facebook.com/docs/facebook-login/overview)
 
-To be compliant with GDPR guidelines, you must provide the following:
+❗️ To be compliant with GDPR guidelines, you must provide the following:
 
 - A way in your app for users to request their data be deleted
 - A contact email address that people can use to reach you to request their data be deleted
