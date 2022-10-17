@@ -1,7 +1,9 @@
 defmodule ElixirAuthFacebook do
   @moduledoc """
   Snippet to enable SSR Facebook Login for web apps.
-  This does not set any cookie.
+
+  Two functions are exposed:
+
 
   nb: if you target Android or IOS, use the SDK.
   """
@@ -12,10 +14,6 @@ defmodule ElixirAuthFacebook do
   @fb_access_token "https://graph.facebook.com/v15.0/oauth/access_token?"
   @fb_debug "https://graph.facebook.com/debug_token?"
   @fb_profile "https://graph.facebook.com/v15.0/me?fields=id,email,name,picture"
-
-  @inject_poison() inject_poison()
-
-  def inject_poison, do: @inject_poison()
 
   # ------ Definition of Credentials
   def app_id(),
@@ -118,7 +116,7 @@ defmodule ElixirAuthFacebook do
     with {:salt, true} <- {:salt, check_salt(state)} do
       code
       |> access_token_uri(conn)
-      |> inject_poison().get!()
+      |> HTTPoison.get!()
       |> Map.get(:body)
       |> Jason.decode!()
       |> then(fn data ->
@@ -142,7 +140,7 @@ defmodule ElixirAuthFacebook do
   def get_data(%Plug.Conn{assigns: %{data: %{"access_token" => token}}} = conn) do
     token
     |> debug_token_uri()
-    |> inject_poison().get!()
+    |> HTTPoison.get!()
     |> Map.get(:body)
     |> Jason.decode!()
     |> Map.get("data")
@@ -165,7 +163,7 @@ defmodule ElixirAuthFacebook do
   def get_session_info(%Plug.Conn{assigns: %{access_token: token}} = conn) do
     token
     |> session_info_url()
-    |> inject_poison().get!()
+    |> HTTPoison.get!()
     |> Map.get(:body)
     |> Jason.decode!()
     |> then(fn data ->
@@ -189,7 +187,7 @@ defmodule ElixirAuthFacebook do
   def get_profile(%Plug.Conn{assigns: %{access_token: token, is_valid: true}} = conn) do
     URI.encode_query(%{"access_token" => token})
     |> graph_api()
-    |> inject_poison().get!()
+    |> HTTPoison.get!()
     |> Map.get(:body)
     |> Jason.decode!()
     |> then(fn data ->

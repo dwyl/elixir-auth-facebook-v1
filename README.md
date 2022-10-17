@@ -221,9 +221,9 @@ All the flow to build the Login flow can be found here:
 
 #### Meta / Privacy Concerns? 🔐
 
-No cookie is set. It just provides user authentication this Login is just.... a login.
-
-❗️ Some [opinions(?) on Meta](https://archive.ph/epKXZ). Use this package as a last resort if you have no other option!
+No cookie is set. It just provides a user authentication. You have the tokens to do more,
+❗️ but need an [opinion(?) on Meta](https://archive.ph/epKXZ).
+Use this package as a last resort if you have no other option!
 
 #### Data deletion?
 
