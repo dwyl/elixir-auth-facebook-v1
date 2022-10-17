@@ -1,98 +1,227 @@
 <div align="center">
 
-# `elixir-auth-facebook`  Comming Soon! See: [`#21`](https://github.com/dwyl/elixir-auth-facebook/issues/21)
+# `elixir-auth-facebook`
 
 ![img](http://i.stack.imgur.com/pZzc4.png)
 
-_Easily_ add `Facebook` login to your `Elixir` / `Phoenix` Apps 
-with step-by-step  **_detailed_ documentation**.
-
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dwyl/auth/Elixir%20CI?label=build&style=flat-square)
-[![codecov.io](https://img.shields.io/codecov/c/github/dwyl/auth/master.svg?style=flat-square)](http://codecov.io/github/dwyl/auth?branch=master)
-[![Hex.pm](https://img.shields.io/hexpm/v/auth?color=brightgreen&style=flat-square)](https://hex.pm/packages/auth)
-[![Libraries.io dependency status](https://img.shields.io/librariesio/release/hex/auth?logoColor=brightgreen&style=flat-square)](https://libraries.io/hex/auth)
-[![docs](https://img.shields.io/badge/docs-maintained-brightgreen?style=flat-square)](https://hexdocs.pm/auth/api-reference.html)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](https://github.com/dwyl/auth/issues)
-[![HitCount](http://hits.dwyl.com/dwyl/elixir-auth-facebook.svg)](http://hits.dwyl.com/dwyl/elixir-auth-facebook)
+_Easily_ add `Facebook` login to your `Elixir` / `Phoenix` Apps
+with step-by-step **_detailed_ documentation**.
 
 </div>
 
 ## Why?
 
-Facebook authentication is used ***everywhere***!
-We wanted to create a reusable `Elixir` package 
-with beginner-friednly instructions and readable code.
+Facebook authentication is used **_everywhere_**!
+More than tens of millions of people use it everyday.
+Facebook Login can be used to authenticate people without planning to access their data.
+
+We wanted to create a reusable `Elixir` package
+with beginner-friendly instructions and readable code.
 
 ## What?
 
-A simple and easy-to-use `Elixir` package 
-that gives you 
-**Facebook `OAuth` Authentication** 
-in a few steps.
+A simple and easy-to-use `Elixir` package that gives you
+**Facebook `OAuth` Authentication** for your **web app**
+in a few steps with a minimal API.
 
-> If you're new to `Elixir`, 
+❗️ If you target Android or IOS, use the SDK.
+
+> If you're new to `Elixir`,
 > please see: [dwyl/**learn-elixir**](https://github.com/dwyl/learn-hapi)
 
 ## How?
 
-<hr />
-
-# ⚠️ WARNING: This is out-of-date see: [`#21`](https://github.com/dwyl/elixir-auth-facebook/issues/21)
-
-
-<hr />
-
-
-
-These instructions will guide you through setup in 6 simple steps
-by the end you will have 
-**login with `Facebook`** 
-working in your App.
-No prior experience/knowledge
-is expected/required.
+These instructions will guide you through setup in 5 simple steps.
+By the end you will have **login with `Facebook`** in your **Web** App.
 
 > **Note**: if you get stuck,
-> please let us know by opening an issue! 
+> please let us know by opening an issue!
 
+## Step 1: Create a Facebook app 🆕
 
+You need to have a Facebook developer account. It is free.
+You will create an app and get the **credentials**.
 
-### Step 1: Upgrade your personal Facebook account to a developer account
+#### Step 1.1 Create or use a developer account from your personal Facebook account
 
-Go to developers.facebook.com/apps
-
-![upgrade-account](https://files.gitter.im/jackcarlisle/hapi-auth-facebook/KNoV/facebook1.png)
+Go to <https://developers.facebook.com/apps/>
 
 ...after logging in to your facebook account, you can 'Register Now' for a developer account.
 
-### Step 2: Select what platform your app is on
+#### Step 1.2 Create an App
 
-![makeapp](https://files.gitter.im/jackcarlisle/hapi-auth-facebook/YOYX/facebook3.png)
+- select the app type: **"consumer"**
+- provide basic info, such as:
+  - app name (can be changed)
+  - contact name
+    ![type](priv/Screenshot%202022-10-16%20at%2014.08.35.png)
 
-### Step 3: Skip to create an App
+#### Step 1.3 Get and save your credentials
 
-On this page, you can click the button in the top right to quickly access your app's id.
+Once you are done, you arrive to the Dasboard.
+Select **settings**, then **basic**.
+You will find your **credentials** there.
+Copy the App ID and the App Secret into your `.env` file.
 
-![skip](https://files.gitter.im/jackcarlisle/hapi-auth-facebook/YOYX/facebook4.png)
+```env
+# .env
+export FACEBOOK_APP_ID=xxxxx
+export FACEBOOK_APP_SECRET=xxxx
+```
 
-### Step 4: Create App
+#### Step 1.4 Specify the base redirect URI
 
-Here you can specify your app's name (doesn't ***have*** to be unique!)
+Lastly, you need to set the callback **base URL**.
+Your app won't work if a wrong or incomplete base URL is set.
 
-![nameapp](https://files.gitter.im/jackcarlisle/hapi-auth-facebook/YOYX/facebook5.png)
+- At the bottom of the form, click on **+ Add platform**
 
-**Note**: Copy the App ID and the Secret into your ```.env``` file.
+![platform](priv/Screenshot%202022-10-17%20at%2018.04.57.png)
 
-### Step 5: Specify Redirect URI
+- click on **Web** in the "Select Platform" modal
 
-Inside the facebook app's **advanced** settings, specify the redirect URI near the *bottom* of the page:
+![select platform](priv/Screenshot%202022-10-17%20at%2018.05.17.png)
 
-![redirecturi](https://files.gitter.im/jackcarlisle/hapi-auth-facebook/QG8M/Screen-Shot-2015-11-27-at-12.21.57.png)
+-
+- a new input will appear: fill the **Site URL** with:
+  <http://localhost:4000>
 
-**Note**: the redirect URI has to be an *absolute* URI - make sure you include the ```http://``` prefix.
+![base url](priv/Screenshot%202022-10-17%20at%2017.39.49.png)
 
-### Step 6: Make a request in your `Elixir` / `Phoenix` server
+**Note**: this is the base redirect URI, so it has to be an _absolute_ URI, not only the domain. Make sure you include the `http://` prefix.
 
-In your `Phoenix` server, make a request to the following url specifying your individual ```app-id``` and ```redirect-uri```
+### Step 2: use the ElixirAuthFacebook module
 
-![facebookRequest](https://files.gitter.im/jackcarlisle/hapi-auth-facebook/fkmD/Screenshot-from-2015-11-27-12_21_22.png)
+You want to display a **login** link in one of your pages.
+It will be an external navigation to the Facebook login dialog form.
 
+#### Add a login link in your template ✨
+
+```html
+<a class="your-classes" href="{@oauth_facebook_url}">
+  <img src={Routes.static_path(@conn, "/images/fb_login.png")}/>
+</a>
+```
+
+#### Modify the template controller
+
+We know need to generate this "href" address and set it in the assign `@oauth_facebook_url`.
+This is done in the controller. You add the code:
+
+```elixir
+use MyAppWeb, :controller
+
+def index(conn, _p) do
+    oauth_facebook_url =
+        ElixirAuthFacebook.generate_oauth_url(conn)
+
+    render(
+        conn,
+        "indx.html",
+        oauth_facebook_url: oauth_facebook_url
+    )
+end
+```
+
+#### Create the `auth/facebook/callback` endpoint 📍
+
+Once the user has filled the dialog form, he will be redirected.
+
+The redirection is set in the router. Add iths line:
+
+```elixir
+#MyAppWeb.Router
+
+scope "/", MyAppWeb do
+    pipe_through :browser
+    get "/auth/facebook/callback", FacebookAuthController, :login
+end
+```
+
+#### Create a `FacebookAuthController`
+
+Add this code
+
+```elixir
+defmodule MyAppWeb.FacebookController do
+    use MyAppWeb, :controller
+
+    def login(conn, _,_) do
+
+        {:ok, profile} =
+            ElixirAuthFacebook.handle_callback(conn, params)
+    end
+end
+```
+
+It eventually sends back on object which identifies the user. _Done_! 🚀
+
+```elixir
+%{
+  access_token: "EAAFNaUA6VI8BAPkCCVV6q0U0tf7...",
+  email: "xxxxx",
+  fb_id: "10223726006128074",
+  name: "Harry Potter",
+  picture: %{
+    "data" => %{
+      "height" => 50,
+      "is_silhouette" => false,
+      "url" => "xxxxx",
+      "width" => 50
+    }
+  },
+  session_info: "XAAFNaUA6VI8BACO99qVYqkGPxxxxx"
+}
+```
+
+You receive a long term "access_token" and a "session_token".
+The app can interact with the Facebook eco-system on behalf of the user.
+It should be saved in the database, and put them in a session.
+
+However, if you smiply need to authneticate a user, these token are useless.
+
+### _Optional_:
+
+In case of errors in the dialog server/facebook, we use a
+termination function.
+It puts flash messages and redirects to a chosen path, say "/".
+
+```elixir
+def terminate(conn, message, path) do
+    conn
+    |> Phoenix.Controller.put_flash(:error, message)
+    |> Phoenix.Controller.redirect(to: path)
+    |> Plug.Conn.halt()
+end
+```
+
+In you want to overright it, define a custom termination function `happy_end/3`
+and pass it as a third optional argument to the call_back:
+
+```elixir
+{:ok, profile} =
+    ElixirAuthFacebook.handle_callback(
+        conn,
+        params,
+        &happy_end/3
+    )
+```
+
+### Notes 📝
+
+All the flow to build the Login flow can be found here:
+<https://developers.facebook.com/docs/facebook-login/guides/advanced/manual-flow>
+
+#### Privacy Concerns? 🔐
+
+No cookie is set.
+
+#### Data deletion?
+
+cf <https://developers.facebook.com/docs/facebook-login/overview>
+
+To be compliant with GDPR guidelines, you must provide the following:
+
+- A way in your app for users to request their data be deleted
+- A contact email address that people can use to reach you to request their data be deleted
+- An implementation of the data deletion callback
