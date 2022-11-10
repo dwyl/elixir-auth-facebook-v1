@@ -2,7 +2,7 @@
 
 # `elixir-auth-facebook`
 
-![img](http://i.stack.imgur.com/pZzc4.png)
+![img](https://i.stack.imgur.com/pZzc4.png)
 
 _Easily_ add `Facebook` login to your `Elixir` / `Phoenix` Apps
 with step-by-step **_detailed_ documentation**.
